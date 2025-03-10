@@ -1,5 +1,5 @@
 class Player {
-    constructor(x, y, width, height) {
+    constructor(x, y, width, height, library) {
         this.startX = x;
         this.startY = y;
         this.x = x;
@@ -8,9 +8,9 @@ class Player {
         this.height = height;
         this.velocityX = 0;
         this.velocityY = 0;
-        this.speed = 5;
-        this.jumpPower = 10;
-        this.gravity = 0.5;
+        this.speed = 5 * 35;
+        this.jumpPower = 10 * 40;
+        this.gravity = 0.5 * 30;
         this.onGround = false;
 
         // Load images
@@ -33,18 +33,22 @@ class Player {
         this.NewImagePayCheck = new Image();
         this.NewImagePayCheck.src = "assets/paycheck.png";
         this.NewImagePayCheck.onload = () => console.log("ImagePayCheck loaded");
+        this.jumpSound = library.getSound("jump");
+        this.jumpSound.volume = 0.5;
+
     }
 
-    update(keys, platforms, enemies, paychecks) {
-        this.velocityY += this.gravity;
+    update(keys, platforms, enemies, paychecks, deltaTime) {
+        this.velocityY +=  Math.fround(this.gravity * deltaTime);
 
-        if (keys["ArrowLeft"] || keys["KeyA"]) this.velocityX = -this.speed;
-        else if (keys["ArrowRight"] || keys["KeyD"]) this.velocityX = this.speed;
+        if (keys["ArrowLeft"] || keys["KeyA"]) this.velocityX = -this.speed * deltaTime;
+        else if (keys["ArrowRight"] || keys["KeyD"]) this.velocityX = this.speed * deltaTime;
         else this.velocityX = 0;
 
         if (keys["Space"] && this.onGround || keys["ArrowUp"] && this.onGround || keys["KeyW"] && this.onGround) {
-            this.velocityY = -this.jumpPower;
+            this.velocityY = -this.jumpPower * deltaTime;
             this.onGround = false;
+            this.jumpSound.play();
         }
 
         this.x += this.velocityX;

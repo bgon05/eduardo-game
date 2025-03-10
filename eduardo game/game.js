@@ -1,25 +1,32 @@
 window.onload = function () {
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
-    const screens = ["maingame", "paycheckscreen"]; 
-    let currentScreen = screens[0]; // start w/ main game
+    const screens = ["maingame", "paycheckscreen", "titlescreen"]; 
+    let currentScreen = screens[2]; // start w/ main game
     const paycheckPhoto = new Image();
     paycheckPhoto.src = "assets/paycheckscreen.webp";
     paycheckPhoto.onload = () => console.log("paycheckPhoto loaded");
 
     canvas.width = 1300;
     canvas.height = 600;
+    let lastTime = performance.now();
+    let deltaTime = 0;
 
     let keys = {};
     let gameLoaded = false;
-
+    
     window.addEventListener("keydown", (e) => (keys[e.code] = true));
     window.addEventListener("keyup", (e) => (keys[e.code] = false));
     window.addEventListener("death", (e) => showDeathAchievement());
     window.addEventListener("paycheck", (e) => showPaycheckScreen());
 
-    const player = new Player(50, 300, 50, 70);
+    const library = new Library();
+    library.loadFiles();
+    
+    const player = new Player(50, 300, 50, 70, library);
 
+    const backgroundMusic = library.getSound("background");
+    backgroundMusic.loop = true;
     const platforms = [
         //base platform
         new Platform(0, 550, 1000, 50),
@@ -88,7 +95,6 @@ window.onload = function () {
             console.error("Achievement element not found");
         }
     }
-
     function showDeathAchievement() {
         const deathAchievement = document.getElementById('death-achievement');
         if (deathAchievement) {
@@ -108,11 +114,14 @@ window.onload = function () {
 
     function gameLoop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+        const now = performance.now();
+        deltaTime = (now - lastTime) / 1000; // Convert to seconds
+        lastTime = now;
+        //console.log(`Delta Time: ${deltaTime.toFixed(4)} seconds`);
         // render different screens
         switch (currentScreen) {
             case "maingame": // maingame
-            player.update(keys, platforms, enemies, paychecks);
+            player.update(keys, platforms, enemies, paychecks, deltaTime);
 
             // Update camera position based on player position
             cameraX = player.x - canvas.width / 2 + player.width / 2;
@@ -141,13 +150,22 @@ window.onload = function () {
                 showAchievement();
                 gameLoaded = true;
             }
-    
-            requestAnimationFrame(gameLoop);
+   
             break;
             case "paycheckscreen":
             ctx.drawImage(paycheckPhoto, 0, 0, canvas.width, canvas.height);
             break;
+            case "titlescreen":
+                if (keys["Space"] || keys["ArrowUp"] || keys["KeyW"]) {
+                    currentScreen = screens[0];
+                    backgroundMusic.play();
+                }
+                ctx.fillText("Eduardo's Very Nice Game", canvas.width / 2, canvas.height / 2);
+                ctx.fillText("Press Space to Begin", canvas.width / 2, (canvas.height / 2) + 150);
+                 // THIS MAKES IT SO THE KEYS REGISTER!!
+            break;
         }
+        requestAnimationFrame(gameLoop);
         
     }
 

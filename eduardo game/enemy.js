@@ -31,7 +31,7 @@ class Enemy {
         
     }
 
-    update() {
+    update(deltaTime) {
         this.x += this.speed * this.direction;
 
         if (this.type == "chicken") {
