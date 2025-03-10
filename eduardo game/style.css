@@ -7,8 +7,7 @@ body {
 
 canvas {
     display: block;
-    background-color: lightgreen;
-    
+    border:3px solid black;
 }
 
 .center {
@@ -16,5 +15,49 @@ canvas {
     justify-content:center;
     align-items:center;
     text-align:center;
-    padding-top:40px;
+    padding-top:75px;
+}
+
+.achievement {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 30px 60px;
+    background-color: yellow;
+    color: black;
+    font-size: 24px;
+    font-weight: bold;
+    border: 2px solid black;
+    border-radius: 20px;
+    animation: flash 2s infinite;
+}
+
+.death {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 30px 60px;
+    background-color: crimson;
+    color: black;
+    font-size: 24px;
+    font-weight: bold;
+    border: 2px solid black;
+    border-radius: 20px;
+    animation: fade 3.3s infinite;
+}
+
+@keyframes fade {
+    100%, 25% { opacity: 1; }
+    50% { opacity: 0; }
+}
+   
+
+
+@keyframes flash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
