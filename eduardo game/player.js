@@ -39,7 +39,7 @@ class Player {
     }
 
     update(keys, platforms, enemies, paychecks, deltaTime) {
-        this.velocityY +=  Math.fround(this.gravity * deltaTime);
+        this.velocityY += Math.fround(this.gravity * deltaTime);
 
         if (keys["ArrowLeft"] || keys["KeyA"]) this.velocityX = -this.speed;
         else if (keys["ArrowRight"] || keys["KeyD"]) this.velocityX = this.speed;
@@ -51,51 +51,55 @@ class Player {
             this.jumpSound.play();
         }
 
-        this.x += this.velocityX  * deltaTime;
-        this.y += this.velocityY  * deltaTime;
+        let newX = this.x + this.velocityX  * deltaTime;
+        let newY = this.y + this.velocityY  * deltaTime;
 
         this.onGround = false;
         platforms.forEach((platform) => {
             if (
-                this.y + this.height > platform.y &&
-                this.y + this.height - this.velocityY <= platform.y &&
                 this.x + this.width > platform.x &&
-                this.x < platform.x + platform.width
+                this.x < platform.x + platform.width &&
+                this.y + this.height <= platform.y &&
+                newY + this.height > platform.y
             ) {
-                this.y = platform.y - this.height;
+                newY = platform.y - this.height;
                 this.velocityY = 0;
                 this.onGround = true;
             }
+        });
 
-            enemies.forEach((enemy) => {
-                if (
-                    this.x < enemy.x + enemy.width &&
-                    this.x + this.width > enemy.x &&
-                    this.y < enemy.y + enemy.height &&
-                    this.y + this.height > enemy.y
-                ) {
-                    this.respawn();
-                    const event = new Event('death');
-                    window.dispatchEvent(event);
-                }
-            });
-
+        this.x = newX;
+        this.y = newY;
+        enemies.forEach((enemy) => {
             if (
-                this.x < paychecks[0].x + paychecks[0].width &&
-                this.x + this.width > paychecks[0].x &&
-                this.y < paychecks[0].y + paychecks[0].height &&
-                this.y + this.height > paychecks[0].y
+                this.x < enemy.x + enemy.width &&
+                this.x + this.width > enemy.x &&
+                this.y < enemy.y + enemy.height &&
+                this.y + this.height > enemy.y
             ) {
-                const event = new Event('paycheck');
-                window.dispatchEvent(event);
-            }
-
-            if (this.y > 600) {
                 this.respawn();
-                const event = new Event("death");
+                const event = new Event('death');
                 window.dispatchEvent(event);
             }
         });
+        if (paychecks.length > 0) {
+            paychecks.forEach((paycheck) => {
+                if (
+                    this.x < paycheck.x + paycheck.width &&
+                    this.x + this.width > paycheck.x &&
+                    this.y < paycheck.y + paycheck.height &&
+                    this.y + this.height > paycheck.y
+                ) {
+                    const event = new Event('paycheck');
+                    window.dispatchEvent(event);
+                }
+            });
+        }
+        if (this.y > 600) {
+            this.respawn();
+            const event = new Event("death");
+            window.dispatchEvent(event);
+        }
 
 
     }

@@ -159,7 +159,7 @@ window.onload = function () {
                     currentScreen = screens[0];
                     backgroundMusic.play();
                 }
-                ctx.fillText("Eduardo's Very Nice Game", canvas.width / 2, canvas.height / 2);
+                ctx.fillText("Eduardo's Very Nice Game", canvas.width / 2, canvas.height / 2, 100);
                 ctx.fillText("Press Space to Begin", canvas.width / 2, (canvas.height / 2) + 150);
                  // THIS MAKES IT SO THE KEYS REGISTER!!
             break;
