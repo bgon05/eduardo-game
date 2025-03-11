@@ -8,9 +8,9 @@ class Player {
         this.height = height;
         this.velocityX = 0;
         this.velocityY = 0;
-        this.speed = 5 * 35;
-        this.jumpPower = 10 * 40;
-        this.gravity = 0.51 * 10;
+        this.speed = 5 * 35 * 1.5;
+        this.jumpPower = 6 * 43 * 1.5;
+        this.gravity = 8 * 45 * 1.5;
         this.onGround = false;
 
         // Load images
@@ -41,18 +41,18 @@ class Player {
     update(keys, platforms, enemies, paychecks, deltaTime) {
         this.velocityY +=  Math.fround(this.gravity * deltaTime);
 
-        if (keys["ArrowLeft"] || keys["KeyA"]) this.velocityX = -this.speed * deltaTime;
-        else if (keys["ArrowRight"] || keys["KeyD"]) this.velocityX = this.speed * deltaTime;
+        if (keys["ArrowLeft"] || keys["KeyA"]) this.velocityX = -this.speed;
+        else if (keys["ArrowRight"] || keys["KeyD"]) this.velocityX = this.speed;
         else this.velocityX = 0;
 
         if (keys["Space"] && this.onGround || keys["ArrowUp"] && this.onGround || keys["KeyW"] && this.onGround) {
-            this.velocityY = -this.jumpPower * deltaTime;
+            this.velocityY = -this.jumpPower;
             this.onGround = false;
             this.jumpSound.play();
         }
 
-        this.x += this.velocityX;
-        this.y += this.velocityY;
+        this.x += this.velocityX  * deltaTime;
+        this.y += this.velocityY  * deltaTime;
 
         this.onGround = false;
         platforms.forEach((platform) => {
