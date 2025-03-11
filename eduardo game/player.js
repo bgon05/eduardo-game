@@ -10,7 +10,7 @@ class Player {
         this.velocityY = 0;
         this.speed = 5 * 35;
         this.jumpPower = 10 * 40;
-        this.gravity = 0.5 * 30;
+        this.gravity = 0.51 * 10;
         this.onGround = false;
 
         // Load images
