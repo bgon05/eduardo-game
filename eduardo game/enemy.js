@@ -1,12 +1,12 @@
 class Enemy {
     constructor(x, y, width, height, type) {
         this.x = x;
-        this.startx = x;
+        this.startx = null;
         this.y = y;
-        this.starty = y;
+        this.starty = null;
         this.width = width;
         this.height = height;
-        this.speed = 2;
+        this.speed = 3 * 35;
         this.direction = 1;
         this.type = type;
         this.imageLoaded = false;
@@ -21,6 +21,7 @@ class Enemy {
         }
         else if (type == "pjwashington") {
             this.image = new Image();
+            this.speed = 6 * 35; // pj washington is faster than eduardo
             this.image.src = "assets/pjwashington.png";
             // Set the imageLoaded flag to true when the image is fully loaded
             this.image.onload = () => {
@@ -32,7 +33,7 @@ class Enemy {
     }
 
     update(deltaTime) {
-        this.x += this.speed * this.direction;
+        this.x += (this.speed * deltaTime) * this.direction;
 
         if (this.type == "chicken") {
             if (this.x <= this.startx) this.direction = 1;
