@@ -9,6 +9,7 @@ window.onload = function () {
 
     const levels = []; // array of levels
     let currentLevel;
+    let levelNum;
     createLevels();
     canvas.width = 1300;
     canvas.height = 600;
@@ -30,6 +31,7 @@ window.onload = function () {
 
     const backgroundMusic = library.getSound("background");
     backgroundMusic.loop = true;
+    const congrats = library.getSound("congrats");
 
     let cameraX = 0;
     let cameraY = 0;
@@ -61,13 +63,17 @@ window.onload = function () {
         }
     }
     function showPaycheckScreen() {
+        backgroundMusic.pause();
+        congrats.play();
         currentScreen = screens[1];
     }
     function createLevels() {
         const platforms = [
-            // main platform
+            // start platform
             new Platform(0, 550, 1000, 50),
+            // main platforms
             new Platform(300, 400, 700, 10),
+            new Platform(300, -80, 700, 10),
             // small platforms
             new Platform(100, 475, 100, 5),
             new Platform(300, 250, 100, 5),
@@ -76,39 +82,46 @@ window.onload = function () {
             new Platform(500, 50, 100, 5),
             new Platform(500, 175, 100, 5),
             new Platform(700, 250, 100, 5),
+            new Platform(700, 60, 100, 5),
             new Platform(900, 175, 100, 5),
+            new Platform(800, -200, 100, 5),
             // winner platform
-            new Platform(650, 0, 150, 10),
+            new Platform(550, -300, 150, 10),
         ];
         const level1 = { // placeholder just to set up the level object
             platforms: platforms,
             enemies: [
                 new Enemy(0, 0, 75, 45, "chicken"), // x and y are placeholders, check level.js for extra set up code
                 new Enemy(0, 0, 40, 140, "pjwashington"), // same for this one
+                new Enemy(0, 0, 40, 140, "pjwashington"),
                 //add misalchicha as boss
             ],
             paychecks: [
                 new Paycheck(0, 0, 120, 70, "paycheck"), // check level.js for extra set up code
             ],
             mainplatforms: [
-                platforms[1]
+                platforms[1],
+                platforms[2]
             ],
             smallplatforms: [
-                platforms[3],
                 platforms[4],
                 platforms[5],
                 platforms[6],
                 platforms[7],
                 platforms[8],
                 platforms[9],
+                platforms[10],
+                platforms[11],
+                platforms[12]
             ],
             winnerplatform: [
-                platforms[10],
+                platforms[13],
             ]
         };
         const levelone = new Level(1, level1.platforms, level1.enemies, level1.paychecks, level1.mainplatforms, level1.smallplatforms, level1.winnerplatform);
         levels.push(levelone);
         currentLevel = levels[0];
+        levelNum = 0;
     }
 
     function gameLoop() {
@@ -153,6 +166,18 @@ window.onload = function () {
             break;
             case "paycheckscreen":
             ctx.drawImage(paycheckPhoto, 0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "white";
+            ctx.font = "25px sans-serif";
+            ctx.fillText("Press Space to Continue", canvas.width -285, canvas.height-5, 500);
+            if (keys["Space"] || keys["ArrowUp"] || keys["KeyW"]) {
+                ctx.fillStyle = "black";
+                ctx.font = "10px sans-serif";
+                backgroundMusic.play();
+                player.respawn();
+                levelNum++;
+                currentLevel = levels[levelNum];
+                currentScreen = screens[0];
+            }
             break;
             case "titlescreen":
                 if (keys["Space"] || keys["ArrowUp"] || keys["KeyW"]) {

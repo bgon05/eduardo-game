@@ -50,6 +50,7 @@ canvas {
     animation: fade 3.3s infinite;
 }
 
+
 @keyframes fade {
     100%, 25% { opacity: 1; }
     50% { opacity: 0; }

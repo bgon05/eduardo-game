@@ -12,20 +12,24 @@ class Level {
         switch (this.number) {
             case 1: // level 1 (add extra platforms)
         // only spawn bro in the main platforms
-            this.pjwplatform = this.mainplatforms[Math.floor(Math.random() * this.mainplatforms.length)];
+            
         // spawn chicken on the small ones
             this.chickenplatform = this.smallplatforms[Math.floor(Math.random() * this.smallplatforms.length)];
         // spawn paycheck on the paycheck platform
           this.paycheckplatform = this.winnerplatform[Math.floor(Math.random() * this.winnerplatform.length)];
           this.enemies[0].x = this.chickenplatform.x; // chicken
           this.enemies[0].y = this.chickenplatform.y - 45;
-          this.enemies[0].startx = this.enemies[0].x
-          this.enemies[0].starty = this.enemies[0].y
+          this.enemies[0].startx = this.enemies[0].x;
+          this.enemies[0].starty = this.enemies[0].y;
+          for (let i = 1; i < this.enemies.length; i++) { // for now theres only three enemies, this ignores the chicken and works for the pjwashingtons
+            // for each pj washington
+                this.pjwplatform = this.mainplatforms[i-1];
+                this.enemies[i].x = this.pjwplatform.x + this.pjwplatform.width / 2; // pj washington
+                this.enemies[i].y = this.pjwplatform.y - 140;
+                this.enemies[i].startx = this.enemies[i].x;
+                this.enemies[i].starty = this.enemies[i].y;
+          };
 
-          this.enemies[1].x = this.pjwplatform.x + this.pjwplatform.width / 2; // pj washington
-          this.enemies[1].y = this.pjwplatform.y - 140;
-          this.enemies[1].startx = this.enemies[1].x;
-          this.enemies[1].starty = this.enemies[1].y
          // paycheck
           this.paychecks[0].x = (this.paycheckplatform.x + 15); // put it in the middle of the platform
           this.paychecks[0].y = this.paycheckplatform.y - 80;
